@@ -26,22 +26,22 @@ with open('WC_2006.pkl', 'rb') as f:
                 # stats = pickle.load(f)
                 for index, match_id in enumerate(stats):
                     # if match_id in upsets:
-                    # if index % 2 == 0:
-                    #     total_minutes.append(sum(stats[match_id][0][1]) - sum(stats[match_id][1][1]))
-                    #     avg_minutes.append((sum(stats[match_id][0][1])/len(stats[match_id][0][1])) - (sum(stats[match_id][1][1])/len(stats[match_id][1][1])))
-                    #     scores.append(stats[match_id][0][2] - stats[match_id][1][2])
-                    # else:
-                    #     total_minutes.append(sum(stats[match_id][1][1]) - sum(stats[match_id][0][1]))
-                    #     avg_minutes.append((sum(stats[match_id][1][1])/len(stats[match_id][1][1])) - (sum(stats[match_id][0][1])/len(stats[match_id][0][1])))
-                    #     scores.append(stats[match_id][1][2] - stats[match_id][0][2])
                     if index % 2 == 0:
-                        total_minutes.append((sum(stats[match_id][0][1]) - sum(stats[match_id][1][1])) / (sum(stats[match_id][0][1]) + sum(stats[match_id][1][1])))
+                        total_minutes.append(sum(stats[match_id][0][1]) - sum(stats[match_id][1][1]))
                         avg_minutes.append((sum(stats[match_id][0][1])/len(stats[match_id][0][1])) - (sum(stats[match_id][1][1])/len(stats[match_id][1][1])))
                         scores.append(stats[match_id][0][2] - stats[match_id][1][2])
                     else:
-                        total_minutes.append((sum(stats[match_id][1][1]) - sum(stats[match_id][0][1])) / (sum(stats[match_id][1][1]) + sum(stats[match_id][0][1])))
+                        total_minutes.append(sum(stats[match_id][1][1]) - sum(stats[match_id][0][1]))
                         avg_minutes.append((sum(stats[match_id][1][1])/len(stats[match_id][1][1])) - (sum(stats[match_id][0][1])/len(stats[match_id][0][1])))
                         scores.append(stats[match_id][1][2] - stats[match_id][0][2])
+                    # if index % 2 == 0:
+                    #     total_minutes.append((sum(stats[match_id][0][1]) - sum(stats[match_id][1][1])) / (sum(stats[match_id][0][1]) + sum(stats[match_id][1][1])))
+                    #     avg_minutes.append((sum(stats[match_id][0][1])/len(stats[match_id][0][1])) - (sum(stats[match_id][1][1])/len(stats[match_id][1][1])))
+                    #     scores.append(stats[match_id][0][2] - stats[match_id][1][2])
+                    # else:
+                    #     total_minutes.append((sum(stats[match_id][1][1]) - sum(stats[match_id][0][1])) / (sum(stats[match_id][1][1]) + sum(stats[match_id][0][1])))
+                    #     avg_minutes.append((sum(stats[match_id][1][1])/len(stats[match_id][1][1])) - (sum(stats[match_id][0][1])/len(stats[match_id][0][1])))
+                    #     scores.append(stats[match_id][1][2] - stats[match_id][0][2])
 
 
 scores, total_minutes = (list(t) for t in zip(*sorted(zip(scores, total_minutes))))
@@ -54,8 +54,8 @@ total_minutes = np.array(total_minutes)[idx]
 # print(scores)
 
 matches = tuple(zip(total_minutes, scores))
-bin_size = 0.33
-# bin_size = 25000
+# bin_size = 0.33
+bin_size = 25000
 minutes = []
 # print(total_minutes, min(total_minutes), max(total_minutes))
 bins = np.arange(min(total_minutes), max(total_minutes), bin_size)
@@ -111,15 +111,17 @@ ax1 = fig.add_subplot(1, 1, 1)
 
 m, b = np.polyfit(total_minutes, scores, 1)
 # m2, b2 = np.polyfit(probability_of_not_loosing, scores, 1)
-ax1.plot(bins[1:], probability_of_winning, color='black')
-ax1.plot(bins[1:], probability_of_not_loosing, color='blue')
+ax1.plot(bins[1:], probability_of_winning, color='black', label='Probability of winning')
+ax1.plot(bins[1:], probability_of_not_loosing, color='blue', label='Probability of not loosing')
 ax1.axhline(y=0.5, color='red')
 # ax1.scatter(total_minutes, scores, color='blue', s=20)
 ax1.set_xlabel('Chemistry difference')
-ax1.set_ylabel('Probability of not loosing')
+ax1.set_ylabel('Probability')
+ax1.legend()
 
 print(m, b)
 # print(m2, b2)
 print(len(bins))
 
 plt.show()
+

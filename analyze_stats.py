@@ -3,6 +3,7 @@ import scipy
 from scipy import stats
 import matplotlib.pyplot as plt
 import numpy as np
+import csv
 
 
 upsets = [191919, 191921, 191929, 191930, 191935, 191943, 191946, 191949, 191951, 191956, 191958, 191959, 191965, 191967, 191969, 191973, 191974, 191977, 191980, 264038, 264050, 264056, 264061, 264073, 264034, 264051, 264058, 264063, 264036, 264054, 264059, 264065, 264108, 264117, 383301, 383297, 383298, 383288, 383284, 383280, 383279, 383276, 383275, 383268, 383251, 383240, 498199, 498197, 498194, 498193, 498188, 498187, 498186, 498180, 498178, 498171, 498169, 498168, 498162, 498161, 498154, 498153, 498152, 498151, 498148, 498142, 498141]
@@ -75,6 +76,16 @@ ax1.plot(total_minutes, m*total_minutes+b, color='black')
 ax1.scatter(total_minutes, scores, color='blue', s=20)
 ax1.set_xlabel('Chemistry difference')
 ax1.set_ylabel('Goal difference')
+
+rows = []
+for x in range(len(total_minutes)):
+    rows.append([total_minutes[x], scores[x]])
+
+fields = ['chem_diff', 'goal_diff']
+with open('chem_diff.csv', 'w') as f:
+    write = csv.writer(f)
+    write.writerow(fields)
+    write.writerows(rows)
 
 print(m, b)
 # print(1/(m*55*90))
