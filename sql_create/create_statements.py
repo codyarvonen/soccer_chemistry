@@ -3,10 +3,6 @@ import sqlite3
 # connection = sqlite3.connect('lineups.db')
 # cursor = connection.cursor()
 
-
-# cursor.execute("""DROP INDEX if exists Idx1;""")
-# cursor.execute("""CREATE INDEX Idx1 ON matches(match_id, date);""")
-
 # cursor.execute("""DROP TABLE if exists matches;""")
 # cursor.execute("""DROP TABLE if exists players;""")
 # cursor.execute("""DROP TABLE if exists teams;""")
