@@ -1,7 +1,6 @@
 import sqlite3
 
-# connection = sqlite3.connect('lineups.db')
-
+# Returns the number of matches and minutes played for a given player
 def get_total(connection:sqlite3.Connection, player_id:int):
     cursor = connection.cursor()
 
@@ -20,11 +19,6 @@ def get_total(connection:sqlite3.Connection, player_id:int):
         total_minutes += minutes
         total_matches += 1
 
-    # print("Total matches played: {}".format(total_matches))
-    # print("Total minutes played: {}".format(total_minutes))
-
     connection.commit()
 
     return total_matches, total_minutes
-
-# connection.close()

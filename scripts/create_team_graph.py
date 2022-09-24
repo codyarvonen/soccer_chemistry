@@ -1,7 +1,6 @@
 import sqlite3
 import pickle
 import sys
-# from turtle import position
 import numpy as np
 import networkx as nx
 from tqdm import tqdm
@@ -12,6 +11,8 @@ from create_player_graph import get_minutes_played
 
 # DOES NOT TAKE INTO ACCOUNT RED CARDS OR 120 MINUTE GAMES
 
+
+# Fetches the match data from the database and stores it in a pickle file
 def get_match_stats(connection:sqlite3.Connection, match_id, dir_name):
     cursor = connection.cursor()
     players = {}
@@ -69,11 +70,6 @@ def main():
 
     mem = sqlite3.connect(':memory:')
     connection.backup(mem)
-
-    # source = sqlite3.connect('existing_db.db')
-    # dest = sqlite3.connect(':memory:')
-    # source.backup(dest)
-
     cursor = connection.cursor()
 
     # positions433 = [[0.25, 0.05], [0.2, 0.1], [0.3, 0.1], [0.1, 0.15], [0.4, 0.15], [0.25, 0.25], [0.15, 0.2], [0.35, 0.2], [0.25, 0.4], [0.15, 0.35], [0.35, 0.35]]
@@ -144,23 +140,7 @@ def main():
                                                 INNER JOIN matches c ON c.match_id = a.match_id AND c.match_id = b.match_id
                                                 WHERE c.date < ? AND a.player_id = ? AND b.player_id = ? AND a.player_type != 'Bench' AND b.player_type != 'Bench';""", 
                                                 (date, player_a, player_b))
-                    # CREATE INDEX Idx1 ON matches(match_id, date);
-                    # 
-                    # results = cursor.execute("""SELECT DISTINCT c.match_id AS 'matchID',
-                    #                                             a.team_id AS 'teamID',
-                    #                                             a.player_id AS 'player1',
-                    #                                             a.player_type AS 'playerType1',
-                    #                                             a.sub_time AS 'subTime1',
-                    #                                             b.player_id AS 'player2',
-                    #                                             b.player_type AS 'playerType2',
-                    #                                             b.sub_time AS 'subTime2',
-                    #                                             d.player_name AS 'name'
-                    #                             FROM lineups a 
-                    #                             INNER JOIN lineups b ON a.match_id = b.match_id AND a.team_id = b.team_id 
-                    #                             INNER JOIN matches c ON c.match_id = a.match_id AND c.match_id = b.match_id
-                    #                             INNER JOIN players d ON d.player_id = a.player_id
-                    #                             WHERE c.date < ? AND a.player_id = ? AND b.player_id = ? AND a.player_type != 'Bench' AND b.player_type != 'Bench';""", 
-                    #                             (date, player_a, player_b))
+                    
                     print("DONE")
                     for result in results:
                         w = get_minutes_played(result)
@@ -203,8 +183,6 @@ def main():
             # nx.draw(G, pos, with_labels=True, labels=dict(G.nodes.data("name")), node_size=1000, width=[w * 10 / max(weights) for w in weights], node_color="skyblue", node_shape="o")
             # plt.show()
 
-
-    # What is the average edge weight per team? Standard deviation? 
 
 if __name__ == "__main__":
     main()

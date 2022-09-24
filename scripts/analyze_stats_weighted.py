@@ -21,13 +21,13 @@ save_csv = False
 #   and 
 # value = [(home_id, [list of home weights], home_score), (away_id, [list of away weights], away_score), date]
 
-with open('WC_2006.pkl', 'rb') as f:
+with open('../data/WC_2006.pkl', 'rb') as f:
     stats = pickle.load(f)
-    with open('WC_2010.pkl', 'rb') as f:
+    with open('../data/WC_2010.pkl', 'rb') as f:
         stats.update(pickle.load(f))
-        with open('WC_2014.pkl', 'rb') as f:
+        with open('../data/WC_2014.pkl', 'rb') as f:
             stats.update(pickle.load(f))
-            with open('WC_2018.pkl', 'rb') as f:
+            with open('../data/WC_2018.pkl', 'rb') as f:
                 stats.update(pickle.load(f))
                 for index, match_id in enumerate(stats):
                     # Calculate the chemistry differences
@@ -79,7 +79,7 @@ if save_csv:
         rows.append([total_minutes[x], scores[x], teams[x][0], teams[x][1], dates[x]])
 
     fields = ['weight_chem_diff', 'goal_diff', 'team_1', 'team_2', 'date']
-    with open('weight_chem_diff.csv', 'w') as f:
+    with open('../data/weight_chem_diff.csv', 'w') as f:
         write = csv.writer(f)
         write.writerow(fields)
         write.writerows(rows)
