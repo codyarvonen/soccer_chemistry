@@ -68,12 +68,14 @@ print("P-Value: {}".format(p))
 # Run the linear regression 
 m, b = np.polyfit(total_minutes, scores, 1)
 
+print(m, b)
+
 # Plot the data
 fig = plt.figure()
 ax1 = fig.add_subplot(1, 1, 1)
 ax1.plot(total_minutes, m*total_minutes+b, color='black')
 ax1.scatter(total_minutes, scores, color='blue', s=20)
-ax1.set_xlabel('Chemistry difference')
+ax1.set_xlabel('Raw chemistry difference (min)')
 ax1.set_ylabel('Goal difference')
 
 if save_csv:

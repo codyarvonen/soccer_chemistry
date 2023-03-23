@@ -45,7 +45,8 @@ def get_match_stats(connection:sqlite3.Connection, match_id, dir_name):
                                                             a.sub_time AS 'subTime1',
                                                             b.player_id AS 'player2',
                                                             b.player_type AS 'playerType2',
-                                                            b.sub_time AS 'subTime2'
+                                                            b.sub_time AS 'subTime2',
+                                                            c.date AS 'date'
                                             FROM lineups a 
                                             INNER JOIN lineups b ON a.match_id = b.match_id AND a.team_id = b.team_id 
                                             INNER JOIN matches c ON c.match_id = a.match_id AND c.match_id = b.match_id
@@ -72,18 +73,18 @@ def main():
     connection.backup(mem)
     cursor = connection.cursor()
 
-    # positions433 = [[0.25, 0.05], [0.2, 0.1], [0.3, 0.1], [0.1, 0.15], [0.4, 0.15], [0.25, 0.25], [0.15, 0.2], [0.35, 0.2], [0.25, 0.4], [0.15, 0.35], [0.35, 0.35]]
-    # positions442 = [[0.25, 0.05], [0.2, 0.1], [0.3, 0.1], [0.1, 0.15], [0.4, 0.15], [0.2, 0.25], [0.3, 0.25], [0.1, 0.3], [0.4, 0.3], [0.2, 0.4], [0.3, 0.4]]
-    # positions4312 = [[0.25, 0.05], [0.2, 0.1], [0.3, 0.1], [0.1, 0.15], [0.4, 0.15], [0.25, 0.25], [0.15, 0.3], [0.35, 0.3], [0.25, 0.35], [0.2, 0.5], [0.3, 0.5]]
-    # positions4213 = [[0.25, 0.05], [0.2, 0.1], [0.3, 0.1], [0.1, 0.15], [0.4, 0.15], [0.25, 0.35], [0.2, 0.2], [0.3, 0.2], [0.25, 0.45], [0.15, 0.3], [0.35, 0.3]]
-    # positions4141 = [[0.25, 0.05], [0.2, 0.1], [0.3, 0.1], [0.25, 0.2], [0.1, 0.15], [0.4, 0.15], [0.2, 0.275], [0.3, 0.274], [0.1, 0.325], [0.4, 0.325], [0.25, 0.4]]
-    # positions3142 = [[0.25, 0.05], [0.25, 0.125], [0.15, 0.15], [0.35, 0.15], [0.25, 0.2], [0.2, 0.3], [0.3, 0.3], [0.1, 0.25], [0.4, 0.25], [0.2, 0.4], [0.3, 0.4]]
-    # positions4231 = [[0.25, 0.05], [0.2, 0.1], [0.3, 0.1], [0.1, 0.15], [0.4, 0.15], [0.25, 0.3], [0.2, 0.2], [0.3, 0.2], [0.25, 0.4], [0.15, 0.35], [0.35, 0.35]]
+    positions433 = [[0.25, 0.05], [0.2, 0.1], [0.3, 0.1], [0.1, 0.15], [0.4, 0.15], [0.25, 0.275], [0.15, 0.225], [0.35, 0.225], [0.25, 0.4], [0.15, 0.35], [0.35, 0.35]]
+    positions442 = [[0.25, 0.05], [0.2, 0.1], [0.3, 0.1], [0.1, 0.15], [0.4, 0.15], [0.2, 0.25], [0.3, 0.25], [0.1, 0.3], [0.4, 0.3], [0.2, 0.4], [0.3, 0.4]]
+    positions4312 = [[0.25, 0.05], [0.2, 0.1], [0.3, 0.1], [0.1, 0.15], [0.4, 0.15], [0.2, 0.4], [0.25, 0.2], [0.25, 0.3], [0.15, 0.25], [0.35, 0.25], [0.3, 0.4]]
+    positions4213 = [[0.25, 0.05], [0.2, 0.1], [0.3, 0.1], [0.1, 0.15], [0.4, 0.15], [0.25, 0.35], [0.2, 0.2], [0.3, 0.2], [0.25, 0.45], [0.15, 0.3], [0.35, 0.3]]
+    positions4141 = [[0.25, 0.05], [0.2, 0.1], [0.3, 0.1], [0.25, 0.2], [0.1, 0.15], [0.4, 0.15], [0.2, 0.275], [0.3, 0.274], [0.1, 0.325], [0.4, 0.325], [0.25, 0.4]]
+    positions3142 = [[0.25, 0.05], [0.25, 0.125], [0.15, 0.15], [0.35, 0.15], [0.25, 0.2], [0.2, 0.3], [0.3, 0.3], [0.1, 0.25], [0.4, 0.25], [0.2, 0.4], [0.3, 0.4]]
+    positions4231 = [[0.25, 0.05], [0.2, 0.1], [0.3, 0.1], [0.1, 0.15], [0.4, 0.15], [0.25, 0.3], [0.2, 0.2], [0.3, 0.2], [0.25, 0.4], [0.15, 0.35], [0.35, 0.35]]
     
-    # positions = [positions433, positions4231]
+    positions = [positions4312, positions433]
 
-    # for i in range(len(positions[1])):
-    #     positions[1][i][0] += 0.5
+    for i in range(len(positions[1])):
+        positions[1][i][0] += 0.5
 
     # match_id = 372838
     match_id = sys.argv[1]
@@ -169,19 +170,22 @@ def main():
 
     elif sys.argv[2] == "load":
 
-        with open('match{}.pkl'.format(match_id), 'rb') as f:
+        with open('../../match{}.pkl'.format(match_id), 'rb') as f:
             G = pickle.load(f)
             
-            # pos = {}
-            # for i, node in enumerate(G.nodes):
-            #     pos[node] = positions[int(i>=11)][i%11]
+            pos = {}
+            for i, node in enumerate(G.nodes):
+                pos[node] = positions[int(i>=11)][i%11]
 
-            # weights = list(zip(*list(G.edges.data("weight"))))[2]
+            weights = list(zip(*list(G.edges.data("weight"))))[2]
 
-            # for p in pos.values():
-            #     print(p)
-            # nx.draw(G, pos, with_labels=True, labels=dict(G.nodes.data("name")), node_size=1000, width=[w * 10 / max(weights) for w in weights], node_color="skyblue", node_shape="o")
-            # plt.show()
+            print(G.nodes.data("name"))
+            print(G.edges.data("weight"))
+
+            for p in pos.values():
+                print(p)
+            nx.draw(G, pos, with_labels=True, labels=dict(G.nodes.data("name")), node_size=1000, width=[w * 10 / max(weights) for w in weights], node_color="skyblue", node_shape="o", edge_color="grey")
+            plt.show()
 
 
 if __name__ == "__main__":

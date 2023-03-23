@@ -1,10 +1,12 @@
 import pickle
 import scipy
+import csv
 from scipy import stats
 import matplotlib.pyplot as plt
 import numpy as np
 
 weighted = True
+save_csv = False
 
 total_minutes = []
 avg_minutes = []
@@ -103,9 +105,25 @@ ax1 = fig.add_subplot(1, 1, 1)
 ax1.plot(bins[1:], probability_of_winning, color='black', label='Probability of winning')
 ax1.plot(bins[1:], probability_of_not_loosing, color='blue', label='Probability of not loosing')
 ax1.axhline(y=0.5, color='red')
-ax1.set_xlabel('Chemistry difference')
+ax1.set_xlabel('Weighted chemistry difference bins')
 ax1.set_ylabel('Probability')
 ax1.legend()
+
+# print(bins)
+# print(bins[1:])
+# Save the data
+if save_csv:
+    rows = []
+    for x in range(len(probability_of_winning)):
+        rows.append([bins[x], bins[x+1], probability_of_winning[x], probability_of_not_loosing[x]])
+
+    fields = ['weight_chem_diff_bin_min', 'weight_chem_diff_bin_max', 'probability_of_winning', 'probability_of_not_loosing']
+    with open('../data/weight_chem_diff_prob.csv', 'w') as f:
+        write = csv.writer(f)
+        write.writerow(fields)
+        write.writerows(rows)
+
+
 
 plt.show()
 
