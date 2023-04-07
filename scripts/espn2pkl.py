@@ -1,101 +1,36 @@
-# import asyncio
-# import time 
-# import aiohttp
-# from aiohttp.client import ClientSession
-
-# counter = 0
-
-# async def download_link(url:str,session:ClientSession):
-#     async with session.get("https://www.espn.com/soccer/match/_/gameId/" + str(url)) as response:
-#         result = await response.text()
-#         if result.status_code is not None:
-#             counter += 1
-#         else:
-#             counter = 100
-
-# async def download_all(urls:list):
-#     my_conn = aiohttp.TCPConnector(limit=10)
-#     async with aiohttp.ClientSession(connector=my_conn) as session:
-#         tasks = []
-#         for url in urls:
-#             task = asyncio.ensure_future(download_link(url=url,session=session))
-#             tasks.append(task)
-#         await asyncio.gather(*tasks,return_exceptions=True) # the await must be nest inside of the session
-
-# url_list = list(range(0, 100))
-# start = time.time()
-# asyncio.run(download_all(url_list))
-# end = time.time()
-# print(f'download {len(url_list)} links in {end - start} seconds')
-# print(counter)
-
-
-
-
-
-
-
-# from tqdm import tqdm 
+# import requests
 # import pickle
-# import asyncio
-# import aiohttp
-# from aiohttp import ClientSession
-# from aiohttp.client import ClientSession
-
-# async def fetch(url, session, done):
-#     async with session.get(url) as response:
-#         if response.status_code == 403:
-#             print("Limit has been reached!")
-#             done.set()
-
-#         print("{}: {}".format(response.status_code, response.url))
-#         return await response.read()
 
 
-# async def bound_fetch(sem, url, session, done):
-#     # Getter function with semaphore.
-#     async with sem:
-#         await fetch(url, session, done)
 
 
-# async def run(urls):
-#     url = "https://www.espn.com/soccer/match/_/gameId/{}"
-#     tasks = []
-#     # create instance of Semaphore
-#     sem = asyncio.Semaphore(1000)
-#     done = asyncio.Event()
-#     # Create client session that will ensure we dont open new connection
-#     # per each request.
-#     my_conn = aiohttp.TCPConnector(limit=10)
-#     async with ClientSession(connector=my_conn) as session:
-#         for id in urls:
-#             # pass Semaphore and session to every GET request
-#             task = asyncio.ensure_future(bound_fetch(sem, url.format(id), session, done))
-#             tasks.append(task)
+# vals = []
+# with open("vals.txt", "r") as file:
+#     lines = file.readlines()
+#     vals = [int(line.strip()) for line in lines]
 
-#         responses = []
-#         for f in tqdm(asyncio.as_completed(tasks), total=len(tasks)):
-#             responses.append(await f)
-#             if done.wait():
-#                 # for t in tasks:
-#                 #     t.cancel()
-#                 break
+# print(len(vals))
 
-#         # await done.wait()
-#         # for t in tasks:
-#         #     t.cancel()
+# pages = []
 
-#         # responses = asyncio.gather(*tasks)
-#         # await responses
+# with requests.Session() as session:
+#     # start_val = 638663
+#     # num_iterations = 1
+#     for id in tqdm(vals, total=len(vals)):
+#     # for id in tqdm(range(start_val, start_val + num_iterations), total=num_iterations):
+#         page = session.get("https://www.espn.com/soccer/match/_/gameId/{}".format(id))
+#         if page.status_code < 300:
+#             soup = BeautifulSoup(page.text, "html.parser")
+#             lineups_data = soup.find(id="gamepackage-game-lineups")
+#             lineups = lineups_data.find_all("div", class_="content")
+#             if len(lineups) > 0:
+#                 pages.append(page)
+#         elif page.status_code == 403:
+#             print("You've been caught!")
+#             break
 
-#         with open('pages.pkl', 'wb') as f:
-#             pickle.dump(responses, f)
-
-# urls = list(range(10891, 700000))
-# loop = asyncio.get_event_loop()
-
-# future = asyncio.ensure_future(run(urls))
-# loop.run_until_complete(future)
+# with open('espn-html-pages.pkl', 'wb') as f:
+#     pickle.dump(pages, f) 
 
 
 
@@ -103,76 +38,76 @@
 
 
 
+import asyncio
+import aiohttp
+import multiprocessing
 
-
-# with open('pages.pkl', 'wb') as f:
-#     pickle.dump(responses, f)
-
-
-# async def bound_fetch(sem, session, answer, done):
-#     #  generating url, headers and json ...
-#     async with sem, session.post(url=url, json=json, headers=headers) as response:
-#         if response.status == 200:
-#             done.set()
-#             done.run_answer = json['answer']
-
-# async def run(words):
-#     sem = asyncio.Semaphore(3)
-#     done = asyncio.Event()
-#     async with aiohttp.ClientSession() as session:
-#         tasks = []
-#         for word in words:
-#             tasks.append(asyncio.create_task(bound_fetch(
-#                 sem=sem, session=session, answer=''.join(word), done=done)))
-#         print("Generated %d possible answers. Checking %s" % (len(words), base_url))
-#         await done.wait()
-#         print('Right answer found: %s' % done.run_answer)
-#         for t in tasks:
-#             t.cancel()
-
-
-# import pickle
-# from bs4 import BeautifulSoup
-
-# with open('pages.pkl', 'rb') as f:
-#     pages = pickle.load(f)
-#     # for obj in mynewlist:
-#     print(pages[0].url)
-#     soup = BeautifulSoup(pages[0].text, "html.parser")
-#     lineups_data = soup.find(id="gamepackage-game-lineups")
-#     if len(lineups_data) > 0:
-#         print("Retreiving lineups for game")
-
-
-
-
-
-import requests
 import pickle
 from tqdm import tqdm
 from bs4 import BeautifulSoup
 
-vals = []
-print(len(vals))
-pages = []
-
-# check_agains = []
-
-with requests.Session() as session:
-    start_val = 638663
-    num_iterations = 1
-    for id in tqdm(range(start_val, start_val + num_iterations), total=num_iterations):
-    # for id in tqdm(vals, total=len(vals)):
-        page = requests.get("https://www.espn.com/soccer/match/_/gameId/{}".format(id))
-        if page.status_code < 300:
-            soup = BeautifulSoup(page.text, "html.parser")
+async def fetch(session: aiohttp.ClientSession, id):
+    async with session.get(f'https://www.espn.com/soccer/match/_/gameId/{id}') as response:
+        if response.status < 300:
+            text = await response.text()
+            soup = BeautifulSoup(text, "html.parser")
             lineups_data = soup.find(id="gamepackage-game-lineups")
             lineups = lineups_data.find_all("div", class_="content")
-            if len(lineups) > 0:
-                pages.append(page)
-        elif page.status_code == 403:
+            if len(lineups) > 0 and lineups is not None:
+                return (id, text)
+            else:
+                return '***No Lineups***'
+        elif response.status == 403:
             print("You've been caught!")
-            break
+            return '*403*'
+        else:
+            return '*4XX*'
 
-with open('pages-test.pkl', 'wb') as f:
-    pickle.dump(pages, f) 
+def process_urls(chunk_of_ids):
+    async def process_chunk(chunk):
+        async with aiohttp.ClientSession() as session:
+            tasks = []
+            for url in chunk:
+                task = asyncio.ensure_future(fetch(session, url))
+                tasks.append(task)
+            return await asyncio.gather(*tasks)
+
+    loop = asyncio.get_event_loop()
+    results = loop.run_until_complete(process_chunk(chunk_of_ids))
+    return results
+
+def run(ids, num_processes):
+    with multiprocessing.Pool(num_processes) as pool:
+        results = []
+        for result in tqdm(pool.imap(process_urls, ids), total=len(ids)):
+            results.extend(result)
+    return results
+
+if __name__ == '__main__':
+
+    # vals = [650050, 638663, 650052, 650053, 650054, 650055, 650056, 650057, 650058, 650059, 650060, 650061]
+    vals = []
+
+    start_val = 654200
+    for i in range(start_val, start_val + 2000):
+        vals.append(i)
+
+    # with open("match_ids/vals.txt_24.txt", "r") as file:
+    #     lines = file.readlines()
+    #     vals = [int(line.strip()) for line in lines]
+
+    print(f'URLs to retrieve: {len(vals)}')
+
+    pages = []
+
+    ids = [vals[i:i + 10] for i in range(0, len(vals), 10)]
+    num_processes = multiprocessing.cpu_count()
+
+    print(f'Numer of proccesses available: {num_processes}')
+
+    pages = run(ids, num_processes)
+
+    print(f'Pages retrieved: {len(pages)}')
+
+    with open('espn-html-pages.pkl', 'wb') as f:
+        pickle.dump(pages, f) 
