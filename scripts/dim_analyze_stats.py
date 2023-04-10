@@ -30,23 +30,25 @@ with open('../data/dim_WC_2018.pkl', 'rb') as f:
             stats.update(pickle.load(f))
             with open('../data/dim_WC_2006.pkl', 'rb') as f:
                 stats.update(pickle.load(f))
-                for index, match_id in enumerate(stats):
-                    team_ids.add(stats[match_id][0][0])
-                    team_ids.add(stats[match_id][1][0])
+                with open('../data/dim_WC_2022.pkl', 'rb') as f:
+                    stats.update(pickle.load(f))
+                    for index, match_id in enumerate(stats):
+                        team_ids.add(stats[match_id][0][0])
+                        team_ids.add(stats[match_id][1][0])
 
-                    # Calculate the chemistry differences
-                    if index % 2 == 0:
-                        total_minutes.append(sum(stats[match_id][0][1]) - sum(stats[match_id][1][1]))
-                        avg_minutes.append((sum(stats[match_id][0][1])/len(stats[match_id][0][1])) - (sum(stats[match_id][1][1])/len(stats[match_id][1][1])))
-                        scores.append(stats[match_id][0][2] - stats[match_id][1][2])
-                        dates.append(stats[match_id][2])
-                        teams.append((stats[match_id][0][0], stats[match_id][1][0]))
-                    else:
-                        total_minutes.append(sum(stats[match_id][1][1]) - sum(stats[match_id][0][1]))
-                        avg_minutes.append((sum(stats[match_id][1][1])/len(stats[match_id][1][1])) - (sum(stats[match_id][0][1])/len(stats[match_id][0][1])))
-                        scores.append(stats[match_id][1][2] - stats[match_id][0][2])
-                        dates.append(stats[match_id][2])
-                        teams.append((stats[match_id][1][0], stats[match_id][0][0]))
+                        # Calculate the chemistry differences
+                        if index % 2 == 0:
+                            total_minutes.append(sum(stats[match_id][0][1]) - sum(stats[match_id][1][1]))
+                            avg_minutes.append((sum(stats[match_id][0][1])/len(stats[match_id][0][1])) - (sum(stats[match_id][1][1])/len(stats[match_id][1][1])))
+                            scores.append(stats[match_id][0][2] - stats[match_id][1][2])
+                            dates.append(stats[match_id][2])
+                            teams.append((stats[match_id][0][0], stats[match_id][1][0]))
+                        else:
+                            total_minutes.append(sum(stats[match_id][1][1]) - sum(stats[match_id][0][1]))
+                            avg_minutes.append((sum(stats[match_id][1][1])/len(stats[match_id][1][1])) - (sum(stats[match_id][0][1])/len(stats[match_id][0][1])))
+                            scores.append(stats[match_id][1][2] - stats[match_id][0][2])
+                            dates.append(stats[match_id][2])
+                            teams.append((stats[match_id][1][0], stats[match_id][0][0]))
 
 # Reorder the data
 scores, total_minutes, dates, teams = (list(t) for t in zip(*sorted(zip(scores, total_minutes, dates, teams))))

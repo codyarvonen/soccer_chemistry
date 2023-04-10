@@ -6,7 +6,7 @@ from sklearn import linear_model
 include_rank = True
 include_chem = True
 
-file_name = 'rank_weight_chem_diff'
+file_name = 'rank_dim_weight_chem_diff'
 
 chemistry = []
 goal_diffs = []
@@ -61,7 +61,8 @@ dwchm = []
 goals = []
 ranks = []
 
-file_name_2 = '22wc'
+# file_name_2 = '22wc'
+file_name_2 = 'WC-2022-team-chemistry'
 
 with open(f'../data/data_paper/chemistry_difference/{file_name_2}.csv') as data_file:
     csv_reader = csv.reader(data_file, delimiter=',')

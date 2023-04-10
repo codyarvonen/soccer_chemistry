@@ -28,7 +28,6 @@ class LineupData:
 with open('espn-html-pages.pkl', 'rb') as f:
 
     conn = sqlite3.connect('../../lineups.db')
-    # conn.execute('PRAGMA cache_size = 100000')
     cursor = conn.cursor()
     conn.isolation_level = None
 
@@ -78,7 +77,6 @@ with open('espn-html-pages.pkl', 'rb') as f:
 
                         date = date_data.select('span[data-date]')[0]['data-date'].split('T')[0]
 
-                        # table_accordion
                         tables = lineups_data.find_all('table', {'data-behavior': 'table_accordion'})
 
                         if len(tables) == 2:

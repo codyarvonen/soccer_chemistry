@@ -4,7 +4,7 @@ import sqlite3
 import numpy as np
 import networkx as nx
 
-dir = 'WC_2006'
+dir = '../../WC_2022'
 
 # key = match_id
 # value = [(home_id, [list of home weights], home_score), (away_id, [list of away weights], away_score), date]
@@ -46,5 +46,5 @@ for match_file in os.listdir(dir):
             stats[match_id] = [(int(G.graph['home_team_id']), home_w, int(G.graph['home_goal'])), (int(G.graph['away_team_id']), away_w, int(G.graph['away_goal'])), G.graph['date']]
 
 
-with open('{}.pkl'.format(dir), 'wb') as f:
+with open('{}.pkl'.format(dir.split('/')[2]), 'wb') as f:
     pickle.dump(stats, f)

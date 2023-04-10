@@ -4,7 +4,7 @@ import sqlite3
 import numpy as np
 import networkx as nx
 
-dir = 'dim_WC_2006'
+dir = 'dim_WC_2022'
 
 # key = match_id
 # value = [(home_id, [list of home weights], home_score), (away_id, [list of away weights], away_score), date]
